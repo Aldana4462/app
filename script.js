@@ -6,6 +6,13 @@ const defaultImages = [
 const canvas = document.getElementById('canvas');
 const layerList = document.getElementById('layerList');
 const textInput = document.getElementById('textInput');
+const propScale = document.getElementById('propScale');
+const propRotate = document.getElementById('propRotate');
+const propOpacity = document.getElementById('propOpacity');
+const cropTop = document.getElementById('cropTop');
+const cropRight = document.getElementById('cropRight');
+const cropBottom = document.getElementById('cropBottom');
+const cropLeft = document.getElementById('cropLeft');
 const layers = [];
 let customImageCount = 0;
 let customTextCount = 0;
@@ -28,12 +35,17 @@ function showBackground(index) {
   currentBackgroundIndex = index;
 }
 
-function applyImageTransform(layer) {
-  if (layer.isDefault) {
-    layer.element.style.transform = `scale(${layer.scale})`;
-  } else {
-    layer.element.style.transform = `translate(-50%, -50%) scale(${layer.scale})`;
+function applyLayerStyles(layer) {
+  const parts = [];
+  if (layer.type === 'image' && !layer.isDefault) {
+    parts.push('translate(-50%, -50%)');
   }
+  parts.push(`scale(${layer.scale})`);
+  parts.push(`rotate(${layer.rotation}deg)`);
+  layer.element.style.transform = parts.join(' ');
+  layer.element.style.opacity = layer.opacity;
+  const c = layer.crop;
+  layer.element.style.clipPath = `inset(${c.top}% ${c.right}% ${c.bottom}% ${c.left}%)`;
 }
 
 function updateLayerPanel() {
@@ -115,6 +127,8 @@ function updateLayerPanel() {
     });
     layerList.appendChild(li);
   });
+
+  updatePropertyPanel();
 }
 
 function updateCanvasOrder() {
@@ -122,6 +136,22 @@ function updateCanvasOrder() {
     layer.element.style.zIndex = idx;
     canvas.appendChild(layer.element);
   });
+}
+
+function updatePropertyPanel() {
+  const inputs = [propScale, propRotate, propOpacity, cropTop, cropRight, cropBottom, cropLeft];
+  if (!selectedLayer) {
+    inputs.forEach(i => { i.disabled = true; });
+    return;
+  }
+  inputs.forEach(i => { i.disabled = false; });
+  propScale.value = selectedLayer.scale;
+  propRotate.value = selectedLayer.rotation;
+  propOpacity.value = selectedLayer.opacity;
+  cropTop.value = selectedLayer.crop.top;
+  cropRight.value = selectedLayer.crop.right;
+  cropBottom.value = selectedLayer.crop.bottom;
+  cropLeft.value = selectedLayer.crop.left;
 }
 
 function addImageLayer(src, name, isDefault = false) {
@@ -133,9 +163,9 @@ function addImageLayer(src, name, isDefault = false) {
   }
   img.style.display = isDefault ? 'none' : 'block';
   canvas.appendChild(img);
-  const layer = { type: 'image', element: img, name, isDefault, scale: 1, visible: true };
+  const layer = { type: 'image', element: img, name, isDefault, scale: 1, rotation: 0, crop: {top:0,right:0,bottom:0,left:0}, opacity: 1, visible: true };
   layers.push(layer);
-  applyImageTransform(layer);
+  applyLayerStyles(layer);
   updateCanvasOrder();
   updateLayerPanel();
   return layer;
@@ -178,13 +208,13 @@ document.getElementById('next').addEventListener('click', () => {
 document.getElementById('zoomIn').addEventListener('click', () => {
   if (!selectedLayer || selectedLayer.type !== 'image') return;
   selectedLayer.scale += 0.1;
-  applyImageTransform(selectedLayer);
+  applyLayerStyles(selectedLayer);
 });
 
 document.getElementById('zoomOut').addEventListener('click', () => {
   if (!selectedLayer || selectedLayer.type !== 'image') return;
   selectedLayer.scale = Math.max(0.1, selectedLayer.scale - 0.1);
-  applyImageTransform(selectedLayer);
+  applyLayerStyles(selectedLayer);
 });
 
 document.getElementById('upload').addEventListener('change', e => {
@@ -210,7 +240,8 @@ document.getElementById('addText').addEventListener('click', () => {
   div.classList.add('text-layer');
   canvas.appendChild(div);
   customTextCount++;
-  layers.push({ type: 'text', element: div, name: `Texto ${customTextCount}`, visible: true });
+  layers.push({ type: 'text', element: div, name: `Texto ${customTextCount}`, scale: 1, rotation: 0, crop: {top:0,right:0,bottom:0,left:0}, opacity: 1, visible: true });
+  applyLayerStyles(layers[layers.length - 1]);
   updateCanvasOrder();
   textInput.value = '';
   updateLayerPanel();
@@ -222,4 +253,20 @@ document.addEventListener('keydown', e => {
   } else if (e.key === 'ArrowRight') {
     document.getElementById('next').click();
   }
+});
+
+[propScale, propRotate, propOpacity, cropTop, cropRight, cropBottom, cropLeft].forEach(input => {
+  input.addEventListener('input', () => {
+    if (!selectedLayer) return;
+    selectedLayer.scale = parseFloat(propScale.value);
+    selectedLayer.rotation = parseFloat(propRotate.value);
+    selectedLayer.opacity = parseFloat(propOpacity.value);
+    selectedLayer.crop = {
+      top: parseFloat(cropTop.value),
+      right: parseFloat(cropRight.value),
+      bottom: parseFloat(cropBottom.value),
+      left: parseFloat(cropLeft.value)
+    };
+    applyLayerStyles(selectedLayer);
+  });
 });
