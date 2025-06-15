@@ -7,6 +7,8 @@ const canvas = document.getElementById('canvas');
 const layerList = document.getElementById('layerList');
 const textInput = document.getElementById('textInput');
 const propScale = document.getElementById('propScale');
+const propX = document.getElementById('propX');
+const propY = document.getElementById('propY');
 const propRotate = document.getElementById('propRotate');
 const propOpacity = document.getElementById('propOpacity');
 const cropTop = document.getElementById('cropTop');
@@ -40,6 +42,7 @@ function applyLayerStyles(layer) {
   if (layer.type === 'image' && !layer.isDefault) {
     parts.push('translate(-50%, -50%)');
   }
+  parts.push(`translate(${layer.x}px, ${layer.y}px)`);
   parts.push(`scale(${layer.scale})`);
   parts.push(`rotate(${layer.rotation}deg)`);
   layer.element.style.transform = parts.join(' ');
@@ -139,13 +142,15 @@ function updateCanvasOrder() {
 }
 
 function updatePropertyPanel() {
-  const inputs = [propScale, propRotate, propOpacity, cropTop, cropRight, cropBottom, cropLeft];
+  const inputs = [propScale, propX, propY, propRotate, propOpacity, cropTop, cropRight, cropBottom, cropLeft];
   if (!selectedLayer) {
     inputs.forEach(i => { i.disabled = true; });
     return;
   }
   inputs.forEach(i => { i.disabled = false; });
   propScale.value = selectedLayer.scale;
+  propX.value = selectedLayer.x;
+  propY.value = selectedLayer.y;
   propRotate.value = selectedLayer.rotation;
   propOpacity.value = selectedLayer.opacity;
   cropTop.value = selectedLayer.crop.top;
@@ -163,7 +168,7 @@ function addImageLayer(src, name, isDefault = false) {
   }
   img.style.display = isDefault ? 'none' : 'block';
   canvas.appendChild(img);
-  const layer = { type: 'image', element: img, name, isDefault, scale: 1, rotation: 0, crop: {top:0,right:0,bottom:0,left:0}, opacity: 1, visible: true };
+  const layer = { type: 'image', element: img, name, isDefault, scale: 1, x: 0, y: 0, rotation: 0, crop: {top:0,right:0,bottom:0,left:0}, opacity: 1, visible: true };
   layers.push(layer);
   applyLayerStyles(layer);
   updateCanvasOrder();
@@ -240,7 +245,7 @@ document.getElementById('addText').addEventListener('click', () => {
   div.classList.add('text-layer');
   canvas.appendChild(div);
   customTextCount++;
-  layers.push({ type: 'text', element: div, name: `Texto ${customTextCount}`, scale: 1, rotation: 0, crop: {top:0,right:0,bottom:0,left:0}, opacity: 1, visible: true });
+  layers.push({ type: 'text', element: div, name: `Texto ${customTextCount}`, scale: 1, x: 0, y: 0, rotation: 0, crop: {top:0,right:0,bottom:0,left:0}, opacity: 1, visible: true });
   applyLayerStyles(layers[layers.length - 1]);
   updateCanvasOrder();
   textInput.value = '';
@@ -255,10 +260,12 @@ document.addEventListener('keydown', e => {
   }
 });
 
-[propScale, propRotate, propOpacity, cropTop, cropRight, cropBottom, cropLeft].forEach(input => {
+[propScale, propX, propY, propRotate, propOpacity, cropTop, cropRight, cropBottom, cropLeft].forEach(input => {
   input.addEventListener('input', () => {
     if (!selectedLayer) return;
     selectedLayer.scale = parseFloat(propScale.value);
+    selectedLayer.x = parseFloat(propX.value);
+    selectedLayer.y = parseFloat(propY.value);
     selectedLayer.rotation = parseFloat(propRotate.value);
     selectedLayer.opacity = parseFloat(propOpacity.value);
     selectedLayer.crop = {
