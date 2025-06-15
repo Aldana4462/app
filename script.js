@@ -13,6 +13,14 @@ let scale = 1;
 let selectedLayer = null;
 let dragStartIndex = null;
 
+function applyImageTransform(layer) {
+  if (layer.isDefault) {
+    layer.element.style.transform = `scale(${scale})`;
+  } else {
+    layer.element.style.transform = `translate(-50%, -50%) scale(${scale})`;
+  }
+}
+
 function updateLayerPanel() {
   layerList.innerHTML = '';
   layers.forEach(layer => {
@@ -61,10 +69,14 @@ function addImageLayer(src, name, isDefault = false) {
   const img = document.createElement('img');
   img.src = src;
   img.classList.add('layer-image');
+  if (!isDefault) {
+    img.classList.add('custom-image');
+  }
   img.style.display = 'none';
   canvas.appendChild(img);
   const layer = { type: 'image', element: img, name, visible: false, isDefault };
   layers.push(layer);
+  applyImageTransform(layer);
   updateCanvasOrder();
   updateLayerPanel();
   return layer;
@@ -75,7 +87,7 @@ function showImage(index) {
   imageLayers.forEach((layer, i) => {
     layer.visible = i === index;
     layer.element.style.display = layer.visible ? 'block' : 'none';
-    layer.element.style.transform = `scale(${scale})`;
+    applyImageTransform(layer);
   });
   currentImageIndex = index;
   updateCanvasOrder();
@@ -104,17 +116,13 @@ document.getElementById('next').addEventListener('click', () => {
 document.getElementById('zoomIn').addEventListener('click', () => {
   scale += 0.1;
   const imgs = layers.filter(l => l.type === 'image');
-  imgs.forEach(layer => {
-    layer.element.style.transform = `scale(${scale})`;
-  });
+  imgs.forEach(applyImageTransform);
 });
 
 document.getElementById('zoomOut').addEventListener('click', () => {
   scale = Math.max(0.1, scale - 0.1);
   const imgs = layers.filter(l => l.type === 'image');
-  imgs.forEach(layer => {
-    layer.element.style.transform = `scale(${scale})`;
-  });
+  imgs.forEach(applyImageTransform);
 });
 
 document.getElementById('upload').addEventListener('change', e => {

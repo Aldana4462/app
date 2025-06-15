@@ -4,6 +4,8 @@ This project provides a minimal responsive web app with a fixed 700x700 canvas. 
 
 The layout adapts to any screen size. On screens wider than about 900&nbsp;px the layer panel sits beside the canvas, while on smaller displays it moves below and the controls shrink so the app remains fully usable on phones and tablets. The entire interface is centered on the page so it looks balanced on both desktop and mobile. The canvas itself is kept in the exact center of the page even when the layer panel is visible.
 
+Uploaded images appear at 40% of the canvas and remain centered so they keep their natural aspect ratio.
+
 ## Files
 - `index.html` – main HTML page
 - `styles.css` – styles for responsive design
