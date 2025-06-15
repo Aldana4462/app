@@ -45,6 +45,7 @@ function updateLayerPanel() {
     li.dataset.index = layers.indexOf(layer);
 
     const nameSpan = document.createElement('span');
+    nameSpan.classList.add('layer-name');
     nameSpan.textContent = layer.name;
     li.appendChild(nameSpan);
 
