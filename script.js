@@ -10,19 +10,50 @@ const layers = [];
 let customImageCount = 0;
 let currentImageIndex = 0;
 let scale = 1;
+let selectedLayer = null;
+let dragStartIndex = null;
 
 function updateLayerPanel() {
   layerList.innerHTML = '';
   layers.forEach(layer => {
     if (layer.isDefault) return;
     const li = document.createElement('li');
+    li.draggable = true;
+    li.dataset.index = layers.indexOf(layer);
     if (layer.type === 'image') {
       li.textContent = layer.name;
       if (layer.visible) li.classList.add('active');
     } else {
       li.textContent = `Texto: ${layer.element.textContent}`;
     }
+    if (layer === selectedLayer) li.classList.add('selected');
+    li.addEventListener('click', () => {
+      selectedLayer = layer;
+      updateLayerPanel();
+    });
+    li.addEventListener('dragstart', e => {
+      dragStartIndex = parseInt(e.target.dataset.index, 10);
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    li.addEventListener('dragover', e => e.preventDefault());
+    li.addEventListener('drop', e => {
+      e.preventDefault();
+      const dropIndex = parseInt(e.target.dataset.index, 10);
+      if (dragStartIndex === null || dragStartIndex === dropIndex) return;
+      const moved = layers.splice(dragStartIndex, 1)[0];
+      layers.splice(dropIndex, 0, moved);
+      dragStartIndex = null;
+      updateCanvasOrder();
+      updateLayerPanel();
+    });
     layerList.appendChild(li);
+  });
+}
+
+function updateCanvasOrder() {
+  layers.forEach((layer, idx) => {
+    layer.element.style.zIndex = idx;
+    canvas.appendChild(layer.element);
   });
 }
 
@@ -34,6 +65,7 @@ function addImageLayer(src, name, isDefault = false) {
   canvas.appendChild(img);
   const layer = { type: 'image', element: img, name, visible: false, isDefault };
   layers.push(layer);
+  updateCanvasOrder();
   updateLayerPanel();
   return layer;
 }
@@ -46,6 +78,7 @@ function showImage(index) {
     layer.element.style.transform = `scale(${scale})`;
   });
   currentImageIndex = index;
+  updateCanvasOrder();
   updateLayerPanel();
 }
 
@@ -105,6 +138,7 @@ document.getElementById('addText').addEventListener('click', () => {
   div.classList.add('text-layer');
   canvas.appendChild(div);
   layers.push({ type: 'text', element: div });
+  updateCanvasOrder();
   textInput.value = '';
   updateLayerPanel();
 });

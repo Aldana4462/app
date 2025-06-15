@@ -99,6 +99,10 @@ body {
   font-weight: bold;
 }
 
+#layerPanel li.selected {
+  background: #c0defc;
+}
+
 @media (max-width: 900px) {
   .main {
     flex-direction: column;
