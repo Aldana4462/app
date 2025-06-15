@@ -56,14 +56,18 @@ canvas {
   height: auto;
 }
 
+.navigation {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
 .nav-button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
   background-color: rgba(0, 0, 0, 0.5);
   color: #fff;
   border: none;
-  border-radius: 50%;
+  border-radius: 4px;
   width: 40px;
   height: 40px;
   font-size: 24px;
@@ -71,12 +75,4 @@ canvas {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-#prevButton {
-  left: 10px;
-}
-
-#nextButton {
-  right: 10px;
 }
