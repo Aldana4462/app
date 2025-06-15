@@ -9,15 +9,14 @@ const textInput = document.getElementById('textInput');
 const layers = [];
 let customImageCount = 0;
 let currentImageIndex = 0;
-let scale = 1;
 let selectedLayer = null;
 let dragStartIndex = null;
 
 function applyImageTransform(layer) {
   if (layer.isDefault) {
-    layer.element.style.transform = `scale(${scale})`;
+    layer.element.style.transform = `scale(${layer.scale})`;
   } else {
-    layer.element.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    layer.element.style.transform = `translate(-50%, -50%) scale(${layer.scale})`;
   }
 }
 
@@ -30,7 +29,6 @@ function updateLayerPanel() {
     li.dataset.index = layers.indexOf(layer);
     if (layer.type === 'image') {
       li.textContent = layer.name;
-      if (layer.visible) li.classList.add('active');
     } else {
       li.textContent = `Texto: ${layer.element.textContent}`;
     }
@@ -72,9 +70,9 @@ function addImageLayer(src, name, isDefault = false) {
   if (!isDefault) {
     img.classList.add('custom-image');
   }
-  img.style.display = 'none';
+  img.style.display = 'block';
   canvas.appendChild(img);
-  const layer = { type: 'image', element: img, name, visible: false, isDefault };
+  const layer = { type: 'image', element: img, name, isDefault, scale: 1 };
   layers.push(layer);
   applyImageTransform(layer);
   updateCanvasOrder();
@@ -82,47 +80,39 @@ function addImageLayer(src, name, isDefault = false) {
   return layer;
 }
 
-function showImage(index) {
-  const imageLayers = layers.filter(l => l.type === 'image');
-  imageLayers.forEach((layer, i) => {
-    layer.visible = i === index;
-    layer.element.style.display = layer.visible ? 'block' : 'none';
-    applyImageTransform(layer);
-  });
-  currentImageIndex = index;
-  updateCanvasOrder();
-  updateLayerPanel();
-}
 
 defaultImages.forEach((src, i) => addImageLayer(src, `Imagen ${i + 1}`, true));
-if (layers.filter(l => l.type === 'image').length > 0) {
-  showImage(0);
+const imageLayers = layers.filter(l => l.type === 'image');
+if (imageLayers.length > 0) {
+  selectedLayer = imageLayers[0];
 }
 
 document.getElementById('prev').addEventListener('click', () => {
   const imgs = layers.filter(l => l.type === 'image');
   if (!imgs.length) return;
   currentImageIndex = (currentImageIndex - 1 + imgs.length) % imgs.length;
-  showImage(currentImageIndex);
+  selectedLayer = imgs[currentImageIndex];
+  updateLayerPanel();
 });
 
 document.getElementById('next').addEventListener('click', () => {
   const imgs = layers.filter(l => l.type === 'image');
   if (!imgs.length) return;
   currentImageIndex = (currentImageIndex + 1) % imgs.length;
-  showImage(currentImageIndex);
+  selectedLayer = imgs[currentImageIndex];
+  updateLayerPanel();
 });
 
 document.getElementById('zoomIn').addEventListener('click', () => {
-  scale += 0.1;
-  const imgs = layers.filter(l => l.type === 'image');
-  imgs.forEach(applyImageTransform);
+  if (!selectedLayer || selectedLayer.type !== 'image') return;
+  selectedLayer.scale += 0.1;
+  applyImageTransform(selectedLayer);
 });
 
 document.getElementById('zoomOut').addEventListener('click', () => {
-  scale = Math.max(0.1, scale - 0.1);
-  const imgs = layers.filter(l => l.type === 'image');
-  imgs.forEach(applyImageTransform);
+  if (!selectedLayer || selectedLayer.type !== 'image') return;
+  selectedLayer.scale = Math.max(0.1, selectedLayer.scale - 0.1);
+  applyImageTransform(selectedLayer);
 });
 
 document.getElementById('upload').addEventListener('change', e => {
@@ -133,7 +123,9 @@ document.getElementById('upload').addEventListener('change', e => {
     customImageCount++;
     const layer = addImageLayer(evt.target.result, `Imagen ${customImageCount}`);
     const imgs = layers.filter(l => l.type === 'image');
-    showImage(imgs.indexOf(layer));
+    currentImageIndex = imgs.indexOf(layer);
+    selectedLayer = layer;
+    updateLayerPanel();
   };
   reader.readAsDataURL(file);
 });

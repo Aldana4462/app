@@ -107,11 +107,6 @@ body {
   font-size: 0.9rem;
 }
 
-#layerPanel li.active {
-  background: #e0e0e0;
-  font-weight: bold;
-}
-
 #layerPanel li.selected {
   background: #c0defc;
 }
