@@ -20,7 +20,7 @@ Visit `http://localhost:3000` in your browser.
 
 * **Left/Right Arrows** – switch between background images
 * **Up/Down Arrows** – zoom in and out of the current image
-* **On-screen Arrow Buttons** – use the buttons above the canvas to change images
+* **On-screen Arrow Buttons** – click to change images
 * **Upload Image** – use the file input below the canvas to add a new layer
 * **Add Text** – enter text in the field and click "Add Text" to place it on the canvas
 * Newly added items appear in the **Layers** panel on the right
