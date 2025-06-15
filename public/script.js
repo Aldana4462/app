@@ -123,4 +123,5 @@ addTextButton.addEventListener('click', () => {
   drawCanvas();
 });
 
+updateLayersPanel();
 loadImages(drawCanvas);
