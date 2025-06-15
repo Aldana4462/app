@@ -1,6 +1,6 @@
 # Responsive Canvas App
 
-This project is a simple web application featuring a responsive 700x700 canvas. It uses Node.js with Express to serve static files.
+This project is a simple web application featuring a responsive 700x700 canvas. It uses Node.js with Express to serve static files. The script now shows a gray placeholder if background images fail to load so the canvas is always visible.
 
 ## Setup
 

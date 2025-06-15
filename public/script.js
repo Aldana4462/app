@@ -16,24 +16,32 @@ function loadImages(callback) {
   imageUrls.forEach((src, i) => {
     const img = new Image();
     img.crossOrigin = 'anonymous';
-    img.onload = () => {
-      images[i] = img;
+    const finalize = () => {
       loaded++;
       if (loaded === imageUrls.length) callback();
     };
+    img.onload = () => {
+      images[i] = img;
+      finalize();
+    };
+    img.onerror = finalize;
     img.src = src;
   });
 }
 
 function drawCanvas() {
   const img = images[currentIndex];
-  if (!img) return;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const scaledWidth = img.width * zoom;
-  const scaledHeight = img.height * zoom;
-  const x = (canvas.width - scaledWidth) / 2;
-  const y = (canvas.height - scaledHeight) / 2;
-  ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
+  if (img) {
+    const scaledWidth = img.width * zoom;
+    const scaledHeight = img.height * zoom;
+    const x = (canvas.width - scaledWidth) / 2;
+    const y = (canvas.height - scaledHeight) / 2;
+    ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
+  } else {
+    ctx.fillStyle = '#f0f0f0';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
   layers.forEach(layer => {
     if (layer.type === 'image') {
       ctx.drawImage(layer.img, layer.x, layer.y);
