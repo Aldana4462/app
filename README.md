@@ -2,7 +2,7 @@
 
 This project provides a minimal responsive web app with a fixed 700x700 canvas. Users can switch between preset images using arrow buttons or the keyboard and zoom the image without changing the canvas size. The toolbar lets you upload custom images and add multiple text layers over the canvas. A panel on the right lists only the layers you add, starting empty when the page loads.
 
-The layout adapts to any screen size. On screens wider than about 900&nbsp;px the layer panel sits beside the canvas, while on smaller displays it moves below and the controls shrink so the app remains fully usable on phones and tablets.
+The layout adapts to any screen size. On screens wider than about 900&nbsp;px the layer panel sits beside the canvas, while on smaller displays it moves below and the controls shrink so the app remains fully usable on phones and tablets. The entire interface is centered on the page so it looks balanced on both desktop and mobile.
 
 ## Files
 - `index.html` – main HTML page
