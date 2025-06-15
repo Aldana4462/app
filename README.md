@@ -20,3 +20,4 @@ Visit `http://localhost:3000` in your browser.
 
 * **Left/Right Arrows** – switch between background images
 * **Up/Down Arrows** – zoom in and out of the current image
+* **On-screen Arrow Buttons** – click to change images

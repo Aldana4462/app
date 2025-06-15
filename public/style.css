@@ -12,9 +12,39 @@ body {
   justify-content: center;
 }
 
+.canvas-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
 canvas {
   border: 1px solid #333;
-  width: 100%; /* Responsive width */
+  width: 100%;
   max-width: 700px;
-  height: auto; /* Maintain aspect ratio */
+  height: auto;
+}
+
+.nav-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#prevButton {
+  left: 10px;
+}
+
+#nextButton {
+  right: 10px;
 }

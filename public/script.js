@@ -62,4 +62,7 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+document.getElementById('prevButton').addEventListener('click', () => changeImage(-1));
+document.getElementById('nextButton').addEventListener('click', () => changeImage(1));
+
 loadImages(drawImage);
