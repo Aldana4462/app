@@ -8,8 +8,14 @@
 </head>
 <body>
     <div class="container">
+        <div class="toolbar">
+            <input type="file" id="upload" accept="image/*">
+            <input type="text" id="textInput" placeholder="Añadir texto">
+            <button id="addText">Añadir</button>
+        </div>
         <div id="canvas">
             <img id="image" src="https://i.ibb.co/MybXCVBR/Los-Angeles-Heavyweight-Crewneck-Sweatshirt-Front.png" alt="Imagen 1">
+            <div id="textOverlay"></div>
         </div>
         <div class="controls">
             <button id="prev">&#8592;</button>
