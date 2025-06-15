@@ -7,12 +7,14 @@ const canvas = document.getElementById('canvas');
 const layerList = document.getElementById('layerList');
 const textInput = document.getElementById('textInput');
 const layers = [];
+let customImageCount = 0;
 let currentImageIndex = 0;
 let scale = 1;
 
 function updateLayerPanel() {
   layerList.innerHTML = '';
   layers.forEach(layer => {
+    if (layer.isDefault) return;
     const li = document.createElement('li');
     if (layer.type === 'image') {
       li.textContent = layer.name;
@@ -24,13 +26,13 @@ function updateLayerPanel() {
   });
 }
 
-function addImageLayer(src, name) {
+function addImageLayer(src, name, isDefault = false) {
   const img = document.createElement('img');
   img.src = src;
   img.classList.add('layer-image');
   img.style.display = 'none';
   canvas.appendChild(img);
-  const layer = { type: 'image', element: img, name, visible: false };
+  const layer = { type: 'image', element: img, name, visible: false, isDefault };
   layers.push(layer);
   updateLayerPanel();
   return layer;
@@ -47,7 +49,7 @@ function showImage(index) {
   updateLayerPanel();
 }
 
-defaultImages.forEach((src, i) => addImageLayer(src, `Imagen ${i + 1}`));
+defaultImages.forEach((src, i) => addImageLayer(src, `Imagen ${i + 1}`, true));
 if (layers.filter(l => l.type === 'image').length > 0) {
   showImage(0);
 }
@@ -87,7 +89,8 @@ document.getElementById('upload').addEventListener('change', e => {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = function(evt) {
-    const layer = addImageLayer(evt.target.result, `Imagen ${layers.length + 1}`);
+    customImageCount++;
+    const layer = addImageLayer(evt.target.result, `Imagen ${customImageCount}`);
     const imgs = layers.filter(l => l.type === 'image');
     showImage(imgs.indexOf(layer));
   };
