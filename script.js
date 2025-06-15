@@ -9,8 +9,21 @@ const textInput = document.getElementById('textInput');
 const layers = [];
 let customImageCount = 0;
 let currentImageIndex = 0;
+let currentBackgroundIndex = 0;
 let selectedLayer = null;
 let dragStartIndex = null;
+
+function getDefaultLayers() {
+  return layers.filter(l => l.type === 'image' && l.isDefault);
+}
+
+function showBackground(index) {
+  const defaults = getDefaultLayers();
+  defaults.forEach((layer, i) => {
+    layer.element.style.display = i === index ? 'block' : 'none';
+  });
+  currentBackgroundIndex = index;
+}
 
 function applyImageTransform(layer) {
   if (layer.isDefault) {
@@ -70,7 +83,7 @@ function addImageLayer(src, name, isDefault = false) {
   if (!isDefault) {
     img.classList.add('custom-image');
   }
-  img.style.display = 'block';
+  img.style.display = isDefault ? 'none' : 'block';
   canvas.appendChild(img);
   const layer = { type: 'image', element: img, name, isDefault, scale: 1 };
   layers.push(layer);
@@ -85,6 +98,9 @@ defaultImages.forEach((src, i) => addImageLayer(src, `Imagen ${i + 1}`, true));
 const imageLayers = layers.filter(l => l.type === 'image');
 if (imageLayers.length > 0) {
   selectedLayer = imageLayers[0];
+  if (selectedLayer.isDefault) {
+    showBackground(0);
+  }
 }
 
 document.getElementById('prev').addEventListener('click', () => {
@@ -92,6 +108,10 @@ document.getElementById('prev').addEventListener('click', () => {
   if (!imgs.length) return;
   currentImageIndex = (currentImageIndex - 1 + imgs.length) % imgs.length;
   selectedLayer = imgs[currentImageIndex];
+  if (selectedLayer.isDefault) {
+    const idx = getDefaultLayers().indexOf(selectedLayer);
+    showBackground(idx);
+  }
   updateLayerPanel();
 });
 
@@ -100,6 +120,10 @@ document.getElementById('next').addEventListener('click', () => {
   if (!imgs.length) return;
   currentImageIndex = (currentImageIndex + 1) % imgs.length;
   selectedLayer = imgs[currentImageIndex];
+  if (selectedLayer.isDefault) {
+    const idx = getDefaultLayers().indexOf(selectedLayer);
+    showBackground(idx);
+  }
   updateLayerPanel();
 });
 
