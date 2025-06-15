@@ -5,7 +5,7 @@ Images you upload or text you add behave like layers so you can still see the on
 
 The layout adapts to any screen size. On screens wider than about 900&nbsp;px the layer panel sits beside the canvas, while on smaller displays it moves below and the controls shrink so the app remains fully usable on phones and tablets. The entire interface is centered on the page so it looks balanced on both desktop and mobile. The canvas itself is kept in the exact center of the page even when the layer panel is visible.
 
-Uploaded images appear at 40% of the canvas and remain centered so they keep their natural aspect ratio.
+Uploaded images appear at 40% of the canvas and remain centered so they keep their natural aspect ratio. The layer panel grows with your layers and scrolls if needed so entries never spill outside the container.
 
 ## Files
 - `index.html` – main HTML page

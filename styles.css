@@ -85,7 +85,8 @@ body {
 
 #layerPanel {
   width: 150px;
-  max-height: 700px;
+  height: auto;
+  max-height: calc(100vh - 20px);
   overflow-y: auto;
   border: 1px solid #ccc;
   position: absolute;
