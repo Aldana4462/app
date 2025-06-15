@@ -8,12 +8,23 @@
 </head>
 <body>
   <h1>Responsive Canvas App</h1>
-  <p>Use the arrows on your keyboard or the on‑screen buttons to change images. Up/Down arrows zoom.</p>
-  <div class="canvas-container">
-    <div class="canvas-wrapper">
-      <button id="prevButton" class="nav-button" aria-label="Previous image">&#9664;</button>
-      <canvas id="drawingCanvas" width="700" height="700"></canvas>
-      <button id="nextButton" class="nav-button" aria-label="Next image">&#9654;</button>
+  <p>Use the arrows on your keyboard or the on-screen buttons to change images. Up/Down arrows zoom.</p>
+  <div class="main-layout">
+    <div class="canvas-container">
+      <div class="canvas-wrapper">
+        <button id="prevButton" class="nav-button" aria-label="Previous image">&#9664;</button>
+        <canvas id="drawingCanvas" width="700" height="700"></canvas>
+        <button id="nextButton" class="nav-button" aria-label="Next image">&#9654;</button>
+      </div>
+      <div class="controls">
+        <input type="file" id="imageUpload" accept="image/*">
+        <input type="text" id="textInput" placeholder="Enter text">
+        <button id="addTextButton">Add Text</button>
+      </div>
+    </div>
+    <div class="layer-panel">
+      <h2>Layers</h2>
+      <ul id="layersList"></ul>
     </div>
   </div>
   <script src="script.js"></script>

@@ -5,16 +5,48 @@ body {
   text-align: center;
 }
 
+
+.main-layout {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+}
+
 .canvas-container {
   max-width: 100%;
   overflow: auto;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .canvas-wrapper {
   position: relative;
   display: inline-block;
+}
+
+.controls {
+  margin-top: 10px;
+}
+
+.layer-panel {
+  width: 200px;
+  text-align: left;
+}
+
+.layer-panel ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #ccc;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.layer-panel li {
+  padding: 4px 8px;
+  border-bottom: 1px solid #eee;
 }
 
 canvas {
