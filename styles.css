@@ -105,6 +105,17 @@ body {
   padding: 5px;
   border-bottom: 1px solid #eee;
   font-size: 0.9rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.layer-controls button {
+  margin-left: 5px;
+  cursor: pointer;
+}
+.layer-controls {
+  display: flex;
 }
 
 #layerPanel li.selected {

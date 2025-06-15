@@ -8,6 +8,7 @@ const layerList = document.getElementById('layerList');
 const textInput = document.getElementById('textInput');
 const layers = [];
 let customImageCount = 0;
+let customTextCount = 0;
 let currentImageIndex = 0;
 let currentBackgroundIndex = 0;
 let selectedLayer = null;
@@ -20,7 +21,9 @@ function getDefaultLayers() {
 function showBackground(index) {
   const defaults = getDefaultLayers();
   defaults.forEach((layer, i) => {
-    layer.element.style.display = i === index ? 'block' : 'none';
+    const visible = i === index;
+    layer.element.style.display = visible ? 'block' : 'none';
+    layer.visible = visible;
   });
   currentBackgroundIndex = index;
 }
@@ -40,11 +43,55 @@ function updateLayerPanel() {
     const li = document.createElement('li');
     li.draggable = true;
     li.dataset.index = layers.indexOf(layer);
-    if (layer.type === 'image') {
-      li.textContent = layer.name;
-    } else {
-      li.textContent = `Texto: ${layer.element.textContent}`;
-    }
+
+    const nameSpan = document.createElement('span');
+    nameSpan.textContent = layer.name;
+    li.appendChild(nameSpan);
+
+    const controls = document.createElement('div');
+    controls.classList.add('layer-controls');
+
+    const visBtn = document.createElement('button');
+    visBtn.textContent = layer.visible ? '👁' : '🚫';
+    visBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      layer.visible = !layer.visible;
+      layer.element.style.display = layer.visible ? 'block' : 'none';
+      updateLayerPanel();
+    });
+    controls.appendChild(visBtn);
+
+    const renameBtn = document.createElement('button');
+    renameBtn.textContent = '✏️';
+    renameBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      const newName = prompt('Nuevo nombre', layer.name);
+      if (newName) {
+        layer.name = newName;
+        if (layer.type === 'text') {
+          layer.element.textContent = newName;
+        }
+        updateLayerPanel();
+      }
+    });
+    controls.appendChild(renameBtn);
+
+    const delBtn = document.createElement('button');
+    delBtn.textContent = '🗑';
+    delBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      const idx = layers.indexOf(layer);
+      if (idx > -1) {
+        layers.splice(idx, 1);
+        layer.element.remove();
+        if (selectedLayer === layer) selectedLayer = null;
+        updateCanvasOrder();
+        updateLayerPanel();
+      }
+    });
+    controls.appendChild(delBtn);
+
+    li.appendChild(controls);
     if (layer === selectedLayer) li.classList.add('selected');
     li.addEventListener('click', () => {
       selectedLayer = layer;
@@ -85,7 +132,7 @@ function addImageLayer(src, name, isDefault = false) {
   }
   img.style.display = isDefault ? 'none' : 'block';
   canvas.appendChild(img);
-  const layer = { type: 'image', element: img, name, isDefault, scale: 1 };
+  const layer = { type: 'image', element: img, name, isDefault, scale: 1, visible: true };
   layers.push(layer);
   applyImageTransform(layer);
   updateCanvasOrder();
@@ -161,7 +208,8 @@ document.getElementById('addText').addEventListener('click', () => {
   div.textContent = value;
   div.classList.add('text-layer');
   canvas.appendChild(div);
-  layers.push({ type: 'text', element: div });
+  customTextCount++;
+  layers.push({ type: 'text', element: div, name: `Texto ${customTextCount}`, visible: true });
   updateCanvasOrder();
   textInput.value = '';
   updateLayerPanel();
