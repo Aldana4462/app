@@ -110,11 +110,7 @@ body {
 }
 
 #propertyPanel label {
-  display: block;
-  font-size: 0.8rem;
-  margin-bottom: 5px;
-}
-
+.control-body.hidden {
 #propertyPanel input[type="range"] {
   width: 100%;
 }
