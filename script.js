@@ -338,8 +338,42 @@ document.addEventListener('keydown', e => {
 });
 
 function alignSelected(dir) {
-  if (selectedLayers.length < 2) return;
+  if (selectedLayers.length === 0) return;
+  const canvasRect = canvas.getBoundingClientRect();
   const rects = selectedLayers.map(l => l.element.getBoundingClientRect());
+
+  if (selectedLayers.length === 1) {
+    const layer = selectedLayers[0];
+    const rect = rects[0];
+    let dx = 0;
+    let dy = 0;
+    switch (dir) {
+      case 'left':
+        dx = canvasRect.left - rect.left;
+        break;
+      case 'right':
+        dx = canvasRect.right - rect.right;
+        break;
+      case 'hcenter':
+        dx = (canvasRect.left + canvasRect.width / 2) - (rect.left + rect.width / 2);
+        break;
+      case 'top':
+        dy = canvasRect.top - rect.top;
+        break;
+      case 'bottom':
+        dy = canvasRect.bottom - rect.bottom;
+        break;
+      case 'vcenter':
+        dy = (canvasRect.top + canvasRect.height / 2) - (rect.top + rect.height / 2);
+        break;
+    }
+    layer.x += dx;
+    layer.y += dy;
+    applyLayerStyles(layer);
+    updatePropertyPanel();
+    return;
+  }
+
   switch (dir) {
     case 'left': {
       const target = Math.min(...rects.map(r => r.left));
