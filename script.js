@@ -482,7 +482,7 @@ function distributeSelected(axis) {
   });
 });
 
-    if (next) next.classList.toggle('active');
+document.getElementById('alignLeft').addEventListener('click', () => alignSelected('left'));
 document.getElementById('alignHCenter').addEventListener('click', () => alignSelected('hcenter'));
 document.getElementById('alignRight').addEventListener('click', () => alignSelected('right'));
 document.getElementById('alignTop').addEventListener('click', () => alignSelected('top'));

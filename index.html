@@ -15,49 +15,51 @@
             <button id="addText">Añadir</button>
         </div>
         <div class="main">
-            <div id="toolbar" class="icon-grid">
-                <button class="prop-btn" id="btnScale" aria-label="Escala" title="Escala"><i class="fa-solid fa-up-down-left-right"></i></button>
-                <div class="control-body">
-                    <input type="range" id="propScale" min="0.1" max="3" step="0.1">
+            <div id="propertyPanel">
+                <h3>Propiedades</h3>
+                <label>Escala <input type="range" id="propScale" min="0.1" max="3" step="0.1"></label>
+                <label>Posición X <input type="range" id="propX" min="-350" max="350" step="1"></label>
+                <label>Posición Y <input type="range" id="propY" min="-350" max="350" step="1"></label>
+                <label>Rotación <input type="range" id="propRotate" min="0" max="360" step="1"></label>
+                <label>Opacidad <input type="range" id="propOpacity" min="0" max="1" step="0.05"></label>
+                <div class="crop-group">
+                    <label>Superior <input type="range" id="cropTop" min="0" max="50" step="1"></label>
+                    <label>Derecha <input type="range" id="cropRight" min="0" max="50" step="1"></label>
+                    <label>Inferior <input type="range" id="cropBottom" min="0" max="50" step="1"></label>
+                    <label>Izquierda <input type="range" id="cropLeft" min="0" max="50" step="1"></label>
                 </div>
-                <button class="prop-btn" id="btnX" aria-label="Posición X" title="Posición X"><i class="fa-solid fa-arrows-left-right"></i></button>
-                <div class="control-body">
-                    <input type="range" id="propX" min="-350" max="350" step="1">
+                <div id="textProperties">
+                    <label>Color <input type="color" id="textColor" value="#000000"></label>
+                    <label>Fuente
+                        <select id="textFont">
+                            <option value="Roboto">Roboto</option>
+                            <option value="Open Sans">Open Sans</option>
+                            <option value="Lato">Lato</option>
+                        </select>
+                    </label>
+                    <label><input type="checkbox" id="textBold"> Negrita</label>
+                    <label><input type="checkbox" id="textUpper"> Mayúscula</label>
+                    <label><input type="checkbox" id="textStrike"> Tachado</label>
+                    <label><input type="checkbox" id="textUnderline"> Subrayado</label>
                 </div>
-                <button class="prop-btn" id="btnY" aria-label="Posición Y" title="Posición Y"><i class="fa-solid fa-arrows-up-down"></i></button>
-                <div class="control-body">
-                    <input type="range" id="propY" min="-350" max="350" step="1">
-                </div>
-                <button class="prop-btn" id="btnRotate" aria-label="Rotación" title="Rotación"><i class="fa-solid fa-rotate-right"></i></button>
-                <div class="control-body">
-                    <input type="range" id="propRotate" min="0" max="360" step="1">
-                </div>
-                <button class="prop-btn" id="btnOpacity" aria-label="Opacidad" title="Opacidad"><i class="fa-solid fa-eye-slash"></i></button>
-                <div class="control-body">
-                    <input type="range" id="propOpacity" min="0" max="1" step="0.05">
-                </div>
-                <button class="prop-btn" id="btnCrop" aria-label="Recorte" title="Recorte"><i class="fa-solid fa-crop"></i></button>
-                <div class="control-body">
-                <button class="prop-btn" id="btnColor" aria-label="Color" title="Color"><i class="fa-solid fa-droplet"></i></button>
-                <div class="control-body">
-                    <input type="color" id="textColor" value="#000000">
-                </div>
-                <button class="prop-btn" id="btnFont" aria-label="Fuente" title="Fuente"><i class="fa-solid fa-font"></i></button>
-                <div class="control-body">
-                <button class="prop-btn" id="btnBold" aria-label="Negrita" title="Negrita"><i class="fa-solid fa-bold"></i></button>
-                <div class="control-body"><input type="checkbox" id="textBold"></div>
-                <button class="prop-btn" id="btnUpper" aria-label="Mayúscula" title="Mayúscula"><i class="fa-solid fa-text-height"></i></button>
-                <div class="control-body"><input type="checkbox" id="textUpper"></div>
-                <button class="prop-btn" id="btnStrike" aria-label="Tachado" title="Tachado"><i class="fa-solid fa-strikethrough"></i></button>
-                <div class="control-body"><input type="checkbox" id="textStrike"></div>
-                <button class="prop-btn" id="btnUnderline" aria-label="Subrayado" title="Subrayado"><i class="fa-solid fa-underline"></i></button>
-                <div class="control-body"><input type="checkbox" id="textUnderline"></div>
-                        <button id="alignLeft" title="Alinear a la izquierda" aria-label="Alinear izquierda" data-action="Alinear izquierda">
-                            <i class="fa-solid fa-align-left"></i>
-                        <button id="alignHCenter" title="Centrar horizontalmente" aria-label="Centrar horizontal" data-action="Centrar horizontal">
-                            <i class="fa-solid fa-align-center"></i>
-                        <button id="alignRight" title="Alinear a la derecha" aria-label="Alinear derecha" data-action="Alinear derecha">
-                            <i class="fa-solid fa-align-right"></i>
+                <div id="alignControls">
+                    <h4>Alinear</h4>
+                    <div class="align-group">
+                        <button id="alignLeft" title="Alinear a la izquierda" data-action="Alinear izquierda">
+                            <svg viewBox="0 0 24 24" width="20" height="20">
+                                <rect x="3" y="3" width="2" height="18" fill="currentColor"/>
+                                <rect x="7" y="6" width="14" height="4" fill="currentColor"/>
+                                <rect x="7" y="14" width="10" height="4" fill="currentColor"/>
+                            </svg>
+                        </button>
+                        <button id="alignHCenter" title="Centrar horizontalmente" data-action="Centrar horizontal">
+                            <svg viewBox="0 0 24 24" width="20" height="20">
+                                <rect x="4" y="3" width="2" height="18" fill="currentColor"/>
+                                <rect x="18" y="3" width="2" height="18" fill="currentColor"/>
+                                <rect x="8" y="6" width="8" height="4" fill="currentColor"/>
+                                <rect x="6" y="14" width="12" height="4" fill="currentColor"/>
+                            </svg>
+                        </button>
                         <button id="alignRight" title="Alinear a la derecha" data-action="Alinear derecha">
                             <svg viewBox="0 0 24 24" width="20" height="20">
                                 <rect x="19" y="3" width="2" height="18" fill="currentColor"/>
