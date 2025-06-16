@@ -92,6 +92,8 @@ body {
   font-size: 1.5rem;
   font-family: 'Roboto', sans-serif;
   pointer-events: none;
+  display: inline-block;
+  white-space: pre;
 }
 
 .controls {
