@@ -493,6 +493,14 @@ document.getElementById('alignBottom').addEventListener('click', () => alignSele
 document.getElementById('distH').addEventListener('click', () => distributeSelected('h'));
 document.getElementById('distV').addEventListener('click', () => distributeSelected('v'));
 
-cropToggle.addEventListener('click', () => {
-  cropGroupDiv.classList.toggle('hidden');
+function toggleCropControls() {
+  const expanded = cropToggle.getAttribute('aria-expanded') === 'true';
+  cropToggle.setAttribute('aria-expanded', (!expanded).toString());
+  cropGroupDiv.classList.toggle('hidden', expanded);
+}
+
+cropToggle.addEventListener('click', toggleCropControls);
+cropToggle.addEventListener('touchstart', evt => {
+  evt.preventDefault();
+  toggleCropControls();
 });

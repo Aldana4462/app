@@ -156,6 +156,11 @@ body {
   display: none;
 }
 
+.crop-container {
+  position: relative;
+  display: inline-block;
+}
+
 .crop-container button {
   background: none;
   border: none;
@@ -166,6 +171,14 @@ body {
 
 .crop-container .crop-group {
   margin-top: 5px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 10;
 }
 
 .crop-group label {
