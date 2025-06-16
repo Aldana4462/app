@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   display: flex;
   align-items: center;
@@ -5,6 +11,7 @@ body {
   min-height: 100vh;
   margin: 0;
   font-family: Arial, sans-serif;
+  overflow-x: hidden;
 }
 
 .container {
@@ -23,12 +30,20 @@ body {
   gap: 10px;
 }
 
+.toolbar input[type="file"],
+.toolbar input[type="text"],
+.toolbar button {
+  flex: 1 1 150px;
+  max-width: 100%;
+}
+
 .main {
   display: flex;
   justify-content: center;
   align-items: flex-start;
   position: relative;
   width: 700px;
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -238,12 +253,18 @@ body {
   background: #c0defc;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1200px) {
   .main {
     flex-direction: column;
     align-items: center;
     width: 100%;
     position: static;
+  }
+
+  #canvas {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
   }
 
   #layerPanel {
@@ -252,6 +273,8 @@ body {
     max-width: 700px;
     margin-left: 0;
     margin-top: 10px;
+    max-height: none;
+    overflow: visible;
   }
 
   #propertyPanel {
@@ -259,6 +282,8 @@ body {
     width: 100%;
     max-width: 700px;
     margin-bottom: 10px;
+    max-height: none;
+    overflow: visible;
   }
 
   .controls button {
@@ -267,3 +292,29 @@ body {
     font-size: 1rem;
   }
 }
+
+@media (max-width: 500px) {
+  #canvas {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .toolbar input[type="file"],
+  .toolbar input[type="text"],
+  .toolbar button {
+    width: 100%;
+  }
+
+  .controls button {
+    margin: 4px;
+    padding: 6px 10px;
+    font-size: 0.9rem;
+  }
+}
+
