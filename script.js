@@ -27,6 +27,7 @@ let customTextCount = 0;
 let currentImageIndex = 0;
 let currentBackgroundIndex = 0;
 let selectedLayer = null;
+let selectedLayers = [];
 let dragStartIndex = null;
 
 function getDefaultLayers() {
@@ -116,7 +117,8 @@ function updateLayerPanel() {
       if (idx > -1) {
         layers.splice(idx, 1);
         layer.element.remove();
-        if (selectedLayer === layer) selectedLayer = null;
+        selectedLayers = selectedLayers.filter(l => l !== layer);
+        if (selectedLayer === layer) selectedLayer = selectedLayers[0] || null;
         updateCanvasOrder();
         updateLayerPanel();
       }
@@ -124,9 +126,19 @@ function updateLayerPanel() {
     controls.appendChild(delBtn);
 
     li.appendChild(controls);
-    if (layer === selectedLayer) li.classList.add('selected');
-    li.addEventListener('click', () => {
-      selectedLayer = layer;
+    if (selectedLayers.includes(layer)) li.classList.add('selected');
+    li.addEventListener('click', e => {
+      if (e.ctrlKey || e.metaKey) {
+        if (selectedLayers.includes(layer)) {
+          selectedLayers = selectedLayers.filter(l => l !== layer);
+        } else {
+          selectedLayers.push(layer);
+          selectedLayer = layer;
+        }
+      } else {
+        selectedLayers = [layer];
+        selectedLayer = layer;
+      }
       updateLayerPanel();
     });
     li.addEventListener('dragstart', e => {
@@ -208,6 +220,7 @@ defaultImages.forEach((src, i) => addImageLayer(src, `Imagen ${i + 1}`, true));
 const imageLayers = layers.filter(l => l.type === 'image');
 if (imageLayers.length > 0) {
   selectedLayer = imageLayers[0];
+  selectedLayers = [selectedLayer];
   if (selectedLayer.isDefault) {
     showBackground(0);
   }
@@ -218,6 +231,7 @@ document.getElementById('prev').addEventListener('click', () => {
   if (!imgs.length) return;
   currentImageIndex = (currentImageIndex - 1 + imgs.length) % imgs.length;
   selectedLayer = imgs[currentImageIndex];
+  selectedLayers = [selectedLayer];
   if (selectedLayer.isDefault) {
     const idx = getDefaultLayers().indexOf(selectedLayer);
     showBackground(idx);
@@ -230,6 +244,7 @@ document.getElementById('next').addEventListener('click', () => {
   if (!imgs.length) return;
   currentImageIndex = (currentImageIndex + 1) % imgs.length;
   selectedLayer = imgs[currentImageIndex];
+  selectedLayers = [selectedLayer];
   if (selectedLayer.isDefault) {
     const idx = getDefaultLayers().indexOf(selectedLayer);
     showBackground(idx);
@@ -259,6 +274,7 @@ document.getElementById('upload').addEventListener('change', e => {
     const imgs = layers.filter(l => l.type === 'image');
     currentImageIndex = imgs.indexOf(layer);
     selectedLayer = layer;
+    selectedLayers = [layer];
     updateLayerPanel();
   };
   reader.readAsDataURL(file);
@@ -276,6 +292,8 @@ document.getElementById('addText').addEventListener('click', () => {
   applyLayerStyles(layers[layers.length - 1]);
   updateCanvasOrder();
   textInput.value = '';
+  selectedLayer = layers[layers.length - 1];
+  selectedLayers = [selectedLayer];
   updateLayerPanel();
 });
 
@@ -316,4 +334,13 @@ document.addEventListener('keydown', e => {
     selectedLayer.underline = textUnderline.checked;
     applyLayerStyles(selectedLayer);
   });
+});
+
+document.getElementById('centerLayers').addEventListener('click', () => {
+  selectedLayers.forEach(layer => {
+    layer.x = 0;
+    layer.y = 0;
+    applyLayerStyles(layer);
+  });
+  updatePropertyPanel();
 });
