@@ -129,6 +129,9 @@ body {
   flex: 1;
   margin: 2px;
   padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .crop-group label {
