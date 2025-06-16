@@ -21,4 +21,5 @@ Use <kbd>Ctrl</kbd> or <kbd>Cmd</kbd> click to select multiple layers. When only
 one layer is selected the alignment icons snap it to the canvas edges or
 center. With two or more layers selected the same icons align them relative to
 each other, and the distribution icons spread three or more layers evenly along
-the chosen axis.
+the chosen axis. The properties panel uses icon buttons from Font Awesome; each
+button reveals its slider or checkbox when clicked so the panel stays compact.
