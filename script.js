@@ -482,13 +482,6 @@ function distributeSelected(axis) {
   });
 });
 
-document.querySelectorAll('.prop-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const next = btn.nextElementSibling;
-    if (next) next.classList.toggle('hidden');
-  });
-});
-
 document.getElementById('alignLeft').addEventListener('click', () => alignSelected('left'));
 document.getElementById('alignHCenter').addEventListener('click', () => alignSelected('hcenter'));
 document.getElementById('alignRight').addEventListener('click', () => alignSelected('right'));

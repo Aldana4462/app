@@ -107,26 +107,15 @@ body {
   top: 0;
   padding: 10px;
   text-align: left;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 36px);
-  gap: 8px;
 }
 
-.prop-btn {
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+#propertyPanel label {
+  display: block;
+  font-size: 0.8rem;
+  margin-bottom: 5px;
 }
 
-.hidden {
-  display: none;
-}
-
-#propertyPanel input[type="range"],
-#propertyPanel input[type="color"],
-#propertyPanel select {
+#propertyPanel input[type="range"] {
   width: 100%;
 }
 
@@ -165,6 +154,17 @@ body {
 
 .crop-group label {
   display: block;
+}
+
+#textProperties label {
+  display: block;
+  font-size: 0.8rem;
+  margin-bottom: 5px;
+}
+
+#textProperties select,
+#textProperties input[type="color"] {
+  width: 100%;
 }
 
 #layerPanel ul {
