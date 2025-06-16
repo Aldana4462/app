@@ -152,12 +152,28 @@ body {
   display: block;
 }
 
-.crop-group label {
-  display: block;
+.hidden {
+  display: none;
 }
 
+.crop-container button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 5px;
+  padding: 0;
+}
+
+.crop-container .crop-group {
+  margin-top: 5px;
+}
+
+.crop-group label {
+  display: block;
   margin-bottom: 5px;
   font-size: 0.8rem;
+}
+
 #textProperties label {
   display: block;
   font-size: 0.8rem;

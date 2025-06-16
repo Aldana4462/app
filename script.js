@@ -15,6 +15,8 @@ const cropTop = document.getElementById('cropTop');
 const cropRight = document.getElementById('cropRight');
 const cropBottom = document.getElementById('cropBottom');
 const cropLeft = document.getElementById('cropLeft');
+const cropToggle = document.getElementById('cropToggle');
+const cropGroupDiv = document.getElementById('cropGroup');
 const textColor = document.getElementById('textColor');
 const textFont = document.getElementById('textFont');
 const textBold = document.getElementById('textBold');
@@ -490,3 +492,7 @@ document.getElementById('alignVCenter').addEventListener('click', () => alignSel
 document.getElementById('alignBottom').addEventListener('click', () => alignSelected('bottom'));
 document.getElementById('distH').addEventListener('click', () => distributeSelected('h'));
 document.getElementById('distV').addEventListener('click', () => distributeSelected('v'));
+
+cropToggle.addEventListener('click', () => {
+  cropGroupDiv.classList.toggle('hidden');
+});
