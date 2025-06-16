@@ -27,7 +27,17 @@ let customTextCount = 0;
 let currentImageIndex = 0;
 let currentBackgroundIndex = 0;
 let selectedLayer = null;
+let selectedLayers = [];
 let dragStartIndex = null;
+const actionInfo = document.getElementById('actionInfo');
+
+function showActionInfo(text) {
+  if (!actionInfo) return;
+  actionInfo.textContent = text;
+  actionInfo.classList.add('show');
+  clearTimeout(showActionInfo._id);
+  showActionInfo._id = setTimeout(() => actionInfo.classList.remove('show'), 1000);
+}
 
 function getDefaultLayers() {
   return layers.filter(l => l.type === 'image' && l.isDefault);
@@ -117,6 +127,7 @@ function updateLayerPanel() {
         layers.splice(idx, 1);
         layer.element.remove();
         if (selectedLayer === layer) selectedLayer = null;
+        selectedLayers = selectedLayers.filter(l => l !== layer);
         updateCanvasOrder();
         updateLayerPanel();
       }
@@ -124,9 +135,19 @@ function updateLayerPanel() {
     controls.appendChild(delBtn);
 
     li.appendChild(controls);
-    if (layer === selectedLayer) li.classList.add('selected');
-    li.addEventListener('click', () => {
-      selectedLayer = layer;
+    if (selectedLayers.includes(layer)) li.classList.add('selected');
+    li.addEventListener('click', e => {
+      const append = e.ctrlKey || e.metaKey;
+      if (!append) {
+        selectedLayers = [layer];
+      } else {
+        if (selectedLayers.includes(layer)) {
+          selectedLayers = selectedLayers.filter(l => l !== layer);
+        } else {
+          selectedLayers.push(layer);
+        }
+      }
+      selectedLayer = selectedLayers[selectedLayers.length - 1] || null;
       updateLayerPanel();
     });
     li.addEventListener('dragstart', e => {
@@ -160,10 +181,11 @@ function updateCanvasOrder() {
 function updatePropertyPanel() {
   const inputs = [propScale, propX, propY, propRotate, propOpacity, cropTop, cropRight, cropBottom, cropLeft];
   const textInputs = [textColor, textFont, textBold, textUpper, textStrike, textUnderline];
-  if (!selectedLayer) {
+  if (selectedLayers.length !== 1) {
     inputs.concat(textInputs).forEach(i => { i.disabled = true; });
     return;
   }
+  selectedLayer = selectedLayers[0];
   inputs.forEach(i => { i.disabled = false; });
   const isText = selectedLayer.type === 'text';
   textInputs.forEach(i => { i.disabled = !isText; });
@@ -208,6 +230,7 @@ defaultImages.forEach((src, i) => addImageLayer(src, `Imagen ${i + 1}`, true));
 const imageLayers = layers.filter(l => l.type === 'image');
 if (imageLayers.length > 0) {
   selectedLayer = imageLayers[0];
+  selectedLayers = [selectedLayer];
   if (selectedLayer.isDefault) {
     showBackground(0);
   }
@@ -218,6 +241,7 @@ document.getElementById('prev').addEventListener('click', () => {
   if (!imgs.length) return;
   currentImageIndex = (currentImageIndex - 1 + imgs.length) % imgs.length;
   selectedLayer = imgs[currentImageIndex];
+  selectedLayers = [selectedLayer];
   if (selectedLayer.isDefault) {
     const idx = getDefaultLayers().indexOf(selectedLayer);
     showBackground(idx);
@@ -230,6 +254,7 @@ document.getElementById('next').addEventListener('click', () => {
   if (!imgs.length) return;
   currentImageIndex = (currentImageIndex + 1) % imgs.length;
   selectedLayer = imgs[currentImageIndex];
+  selectedLayers = [selectedLayer];
   if (selectedLayer.isDefault) {
     const idx = getDefaultLayers().indexOf(selectedLayer);
     showBackground(idx);
@@ -258,6 +283,7 @@ document.getElementById('upload').addEventListener('change', e => {
     const layer = addImageLayer(evt.target.result, `Imagen ${customImageCount}`);
     const imgs = layers.filter(l => l.type === 'image');
     currentImageIndex = imgs.indexOf(layer);
+    selectedLayers = [layer];
     selectedLayer = layer;
     updateLayerPanel();
   };
@@ -276,6 +302,8 @@ document.getElementById('addText').addEventListener('click', () => {
   applyLayerStyles(layers[layers.length - 1]);
   updateCanvasOrder();
   textInput.value = '';
+  selectedLayers = [layers[layers.length - 1]];
+  selectedLayer = layers[layers.length - 1];
   updateLayerPanel();
 });
 
@@ -319,8 +347,42 @@ document.addEventListener('keydown', e => {
 });
 
 function alignSelected(dir) {
-  if (selectedLayers.length < 2) return;
+  if (selectedLayers.length === 0) return;
+  const canvasRect = canvas.getBoundingClientRect();
   const rects = selectedLayers.map(l => l.element.getBoundingClientRect());
+
+  if (selectedLayers.length === 1) {
+    const layer = selectedLayers[0];
+    const rect = rects[0];
+    let dx = 0;
+    let dy = 0;
+    switch (dir) {
+      case 'left':
+        dx = canvasRect.left - rect.left;
+        break;
+      case 'right':
+        dx = canvasRect.right - rect.right;
+        break;
+      case 'hcenter':
+        dx = (canvasRect.left + canvasRect.width / 2) - (rect.left + rect.width / 2);
+        break;
+      case 'top':
+        dy = canvasRect.top - rect.top;
+        break;
+      case 'bottom':
+        dy = canvasRect.bottom - rect.bottom;
+        break;
+      case 'vcenter':
+        dy = (canvasRect.top + canvasRect.height / 2) - (rect.top + rect.height / 2);
+        break;
+    }
+    layer.x += dx;
+    layer.y += dy;
+    applyLayerStyles(layer);
+    updatePropertyPanel();
+    return;
+  }
+
   switch (dir) {
     case 'left': {
       const target = Math.min(...rects.map(r => r.left));
@@ -410,6 +472,15 @@ function distributeSelected(axis) {
   }
   updatePropertyPanel();
 }
+
+['alignLeft','alignHCenter','alignRight','alignTop','alignVCenter','alignBottom','distH','distV','prev','next','zoomIn','zoomOut'].forEach(id => {
+  const btn = document.getElementById(id);
+  if (!btn) return;
+  btn.addEventListener('click', e => {
+    const action = e.currentTarget.dataset.action || '';
+    if (action) showActionInfo(action);
+  });
+});
 
 document.getElementById('alignLeft').addEventListener('click', () => alignSelected('left'));
 document.getElementById('alignHCenter').addEventListener('click', () => alignSelected('hcenter'));

@@ -17,6 +17,8 @@ Uploaded images appear at 40% of the canvas and remain centered so they keep the
 Open `index.html` in a web browser. The layout adjusts for mobile and desktop screens. Use the arrow buttons or the left/right arrow keys to choose a different image layer. Press the plus and minus buttons to zoom the currently selected image. The layer panel lists each layer and highlights the one that is selected. When you first open the page the panel is empty, and it will display items only after you upload an image or add text.
 You can reorder visible layers by dragging them in the list. Each layer entry
 also includes buttons to rename the layer, remove it or toggle its visibility.
-canvas. Additional alignment buttons let you line up the selected layers to the
-left, right, top, bottom or center just like in Adobe apps, and you can
-distribute them evenly horizontally or vertically.
+Use <kbd>Ctrl</kbd> or <kbd>Cmd</kbd> click to select multiple layers. When only
+one layer is selected the alignment icons snap it to the canvas edges or
+center. With two or more layers selected the same icons align them relative to
+each other, and the distribution icons spread three or more layers evenly along
+the chosen axis.
