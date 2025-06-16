@@ -119,18 +119,6 @@ body {
   width: 100%;
 }
 
-#alignControls .align-group {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 5px;
-}
-
-#alignControls button {
-  flex: 1;
-  margin: 2px;
-  padding: 5px;
-}
-
 .crop-group label {
   display: block;
 }
