@@ -22,11 +22,18 @@
                 <label>Posición Y <input type="range" id="propY" min="-350" max="350" step="1"></label>
                 <label>Rotación <input type="range" id="propRotate" min="0" max="360" step="1"></label>
                 <label>Opacidad <input type="range" id="propOpacity" min="0" max="1" step="0.05"></label>
-                <div class="crop-group">
-                    <label>Superior <input type="range" id="cropTop" min="0" max="50" step="1"></label>
-                    <label>Derecha <input type="range" id="cropRight" min="0" max="50" step="1"></label>
-                    <label>Inferior <input type="range" id="cropBottom" min="0" max="50" step="1"></label>
-                    <label>Izquierda <input type="range" id="cropLeft" min="0" max="50" step="1"></label>
+                <div class="crop-container">
+                    <button id="cropToggle" title="Recorte" aria-label="Recorte" aria-expanded="false">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path d="M3 6h2v9h9v2H5v5H3V6zm12-3h2v5h5v2h-7V3z" fill="currentColor"/>
+                        </svg>
+                    </button>
+                    <div id="cropGroup" class="crop-group hidden" role="group">
+                        <label>Superior <input type="range" id="cropTop" min="0" max="50" step="1"></label>
+                        <label>Derecha <input type="range" id="cropRight" min="0" max="50" step="1"></label>
+                        <label>Inferior <input type="range" id="cropBottom" min="0" max="50" step="1"></label>
+                        <label>Izquierda <input type="range" id="cropLeft" min="0" max="50" step="1"></label>
+                    </div>
                 </div>
                 <div id="textProperties">
                     <label>Color <input type="color" id="textColor" value="#000000"></label>

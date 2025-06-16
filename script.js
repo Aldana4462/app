@@ -15,6 +15,8 @@ const cropTop = document.getElementById('cropTop');
 const cropRight = document.getElementById('cropRight');
 const cropBottom = document.getElementById('cropBottom');
 const cropLeft = document.getElementById('cropLeft');
+const cropToggle = document.getElementById('cropToggle');
+const cropGroupDiv = document.getElementById('cropGroup');
 const textColor = document.getElementById('textColor');
 const textFont = document.getElementById('textFont');
 const textBold = document.getElementById('textBold');
@@ -490,3 +492,94 @@ document.getElementById('alignVCenter').addEventListener('click', () => alignSel
 document.getElementById('alignBottom').addEventListener('click', () => alignSelected('bottom'));
 document.getElementById('distH').addEventListener('click', () => distributeSelected('h'));
 document.getElementById('distV').addEventListener('click', () => distributeSelected('v'));
+
+let cropListenerAdded = false;
+
+function startCropSelection() {
+  if (!selectedLayer || selectedLayers.length !== 1) return;
+  const layerRect = selectedLayer.element.getBoundingClientRect();
+  const canvasRect = canvas.getBoundingClientRect();
+  const overlay = document.createElement('div');
+  overlay.id = 'cropOverlay';
+  canvas.appendChild(overlay);
+
+  let startX, startY;
+
+  function clamp(val, min, max) {
+    return Math.min(max, Math.max(min, val));
+  }
+
+  function pointerMove(e) {
+    const x = clamp(e.clientX, layerRect.left, layerRect.right);
+    const y = clamp(e.clientY, layerRect.top, layerRect.bottom);
+    const x0 = Math.min(startX, x);
+    const y0 = Math.min(startY, y);
+    const x1 = Math.max(startX, x);
+    const y1 = Math.max(startY, y);
+    overlay.style.left = (x0 - canvasRect.left) + 'px';
+    overlay.style.top = (y0 - canvasRect.top) + 'px';
+    overlay.style.width = (x1 - x0) + 'px';
+    overlay.style.height = (y1 - y0) + 'px';
+  }
+
+  function pointerUp(e) {
+    document.removeEventListener('pointermove', pointerMove);
+    document.removeEventListener('pointerup', pointerUp);
+    const x0 = parseFloat(overlay.style.left) + canvasRect.left;
+    const y0 = parseFloat(overlay.style.top) + canvasRect.top;
+    const x1 = x0 + parseFloat(overlay.style.width);
+    const y1 = y0 + parseFloat(overlay.style.height);
+    const top = ((y0 - layerRect.top) / layerRect.height) * 100;
+    const left = ((x0 - layerRect.left) / layerRect.width) * 100;
+    const right = ((layerRect.right - x1) / layerRect.width) * 100;
+    const bottom = ((layerRect.bottom - y1) / layerRect.height) * 100;
+    const c = {
+      top: clamp(top, 0, 50),
+      right: clamp(right, 0, 50),
+      bottom: clamp(bottom, 0, 50),
+      left: clamp(left, 0, 50)
+    };
+    selectedLayer.crop = c;
+    applyLayerStyles(selectedLayer);
+    updatePropertyPanel();
+    overlay.remove();
+    cropListenerAdded = false;
+  }
+
+  function pointerDown(e) {
+    if (e.button !== 0) return;
+    if (e.clientX < layerRect.left || e.clientX > layerRect.right ||
+        e.clientY < layerRect.top || e.clientY > layerRect.bottom) {
+      return;
+    }
+    startX = clamp(e.clientX, layerRect.left, layerRect.right);
+    startY = clamp(e.clientY, layerRect.top, layerRect.bottom);
+    overlay.style.left = (startX - canvasRect.left) + 'px';
+    overlay.style.top = (startY - canvasRect.top) + 'px';
+    overlay.style.width = '0px';
+    overlay.style.height = '0px';
+    document.addEventListener('pointermove', pointerMove);
+    document.addEventListener('pointerup', pointerUp);
+  }
+
+  if (!cropListenerAdded) {
+    cropListenerAdded = true;
+    document.addEventListener('pointerdown', pointerDown, { once: true });
+  }
+}
+
+function toggleCropControls() {
+  const expanded = cropToggle.getAttribute('aria-expanded') === 'true';
+  const show = !expanded;
+  cropToggle.setAttribute('aria-expanded', show.toString());
+  cropGroupDiv.classList.toggle('hidden', !show);
+  if (show) {
+    startCropSelection();
+  }
+}
+
+cropToggle.addEventListener('click', toggleCropControls);
+cropToggle.addEventListener('touchstart', evt => {
+  evt.preventDefault();
+  toggleCropControls();
+});
