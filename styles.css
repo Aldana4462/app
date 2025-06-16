@@ -31,10 +31,17 @@ body {
 }
 
 .toolbar input[type="file"],
-.toolbar input[type="text"],
-.toolbar button {
+.toolbar input[type="text"] {
   flex: 1 1 150px;
   max-width: 100%;
+}
+
+.toolbar button {
+  flex: 0 0 auto;
+}
+
+#addTextIcon {
+  padding: 6px;
 }
 
 .main {
@@ -306,8 +313,11 @@ body {
   }
 
   .toolbar input[type="file"],
-  .toolbar input[type="text"],
-  .toolbar button {
+  .toolbar input[type="text"] {
+    width: 100%;
+  }
+
+  #addText {
     width: 100%;
   }
 
