@@ -15,6 +15,12 @@ const cropTop = document.getElementById('cropTop');
 const cropRight = document.getElementById('cropRight');
 const cropBottom = document.getElementById('cropBottom');
 const cropLeft = document.getElementById('cropLeft');
+const textColor = document.getElementById('textColor');
+const textFont = document.getElementById('textFont');
+const textBold = document.getElementById('textBold');
+const textUpper = document.getElementById('textUpper');
+const textStrike = document.getElementById('textStrike');
+const textUnderline = document.getElementById('textUnderline');
 const layers = [];
 let customImageCount = 0;
 let customTextCount = 0;
@@ -49,6 +55,16 @@ function applyLayerStyles(layer) {
   layer.element.style.opacity = layer.opacity;
   const c = layer.crop;
   layer.element.style.clipPath = `inset(${c.top}% ${c.right}% ${c.bottom}% ${c.left}%)`;
+  if (layer.type === 'text') {
+    layer.element.style.color = layer.color;
+    layer.element.style.fontFamily = `'${layer.font}', sans-serif`;
+    layer.element.style.fontWeight = layer.bold ? 'bold' : 'normal';
+    layer.element.style.textTransform = layer.upper ? 'uppercase' : 'none';
+    const decorations = [];
+    if (layer.underline) decorations.push('underline');
+    if (layer.strike) decorations.push('line-through');
+    layer.element.style.textDecoration = decorations.join(' ');
+  }
 }
 
 function updateLayerPanel() {
@@ -143,11 +159,14 @@ function updateCanvasOrder() {
 
 function updatePropertyPanel() {
   const inputs = [propScale, propX, propY, propRotate, propOpacity, cropTop, cropRight, cropBottom, cropLeft];
+  const textInputs = [textColor, textFont, textBold, textUpper, textStrike, textUnderline];
   if (!selectedLayer) {
-    inputs.forEach(i => { i.disabled = true; });
+    inputs.concat(textInputs).forEach(i => { i.disabled = true; });
     return;
   }
   inputs.forEach(i => { i.disabled = false; });
+  const isText = selectedLayer.type === 'text';
+  textInputs.forEach(i => { i.disabled = !isText; });
   propScale.value = selectedLayer.scale;
   propX.value = selectedLayer.x;
   propY.value = selectedLayer.y;
@@ -157,6 +176,14 @@ function updatePropertyPanel() {
   cropRight.value = selectedLayer.crop.right;
   cropBottom.value = selectedLayer.crop.bottom;
   cropLeft.value = selectedLayer.crop.left;
+  if (isText) {
+    textColor.value = selectedLayer.color;
+    textFont.value = selectedLayer.font;
+    textBold.checked = selectedLayer.bold;
+    textUpper.checked = selectedLayer.upper;
+    textStrike.checked = selectedLayer.strike;
+    textUnderline.checked = selectedLayer.underline;
+  }
 }
 
 function addImageLayer(src, name, isDefault = false) {
@@ -245,7 +272,7 @@ document.getElementById('addText').addEventListener('click', () => {
   div.classList.add('text-layer');
   canvas.appendChild(div);
   customTextCount++;
-  layers.push({ type: 'text', element: div, name: `Texto ${customTextCount}`, scale: 1, x: 0, y: 0, rotation: 0, crop: {top:0,right:0,bottom:0,left:0}, opacity: 1, visible: true });
+  layers.push({ type: 'text', element: div, name: `Texto ${customTextCount}`, scale: 1, x: 0, y: 0, rotation: 0, crop: {top:0,right:0,bottom:0,left:0}, opacity: 1, visible: true, color: '#000000', font: 'Roboto', bold: false, upper: false, strike: false, underline: false });
   applyLayerStyles(layers[layers.length - 1]);
   updateCanvasOrder();
   textInput.value = '';
@@ -274,6 +301,19 @@ document.addEventListener('keydown', e => {
       bottom: parseFloat(cropBottom.value),
       left: parseFloat(cropLeft.value)
     };
+    applyLayerStyles(selectedLayer);
+  });
+});
+
+[textColor, textFont, textBold, textUpper, textStrike, textUnderline].forEach(input => {
+  input.addEventListener('input', () => {
+    if (!selectedLayer || selectedLayer.type !== 'text') return;
+    selectedLayer.color = textColor.value;
+    selectedLayer.font = textFont.value;
+    selectedLayer.bold = textBold.checked;
+    selectedLayer.upper = textUpper.checked;
+    selectedLayer.strike = textStrike.checked;
+    selectedLayer.underline = textUnderline.checked;
     applyLayerStyles(selectedLayer);
   });
 });
