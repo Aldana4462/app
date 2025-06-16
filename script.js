@@ -29,6 +29,15 @@ let currentBackgroundIndex = 0;
 let selectedLayer = null;
 let selectedLayers = [];
 let dragStartIndex = null;
+const actionInfo = document.getElementById('actionInfo');
+
+function showActionInfo(text) {
+  if (!actionInfo) return;
+  actionInfo.textContent = text;
+  actionInfo.classList.add('show');
+  clearTimeout(showActionInfo._id);
+  showActionInfo._id = setTimeout(() => actionInfo.classList.remove('show'), 1000);
+}
 
 function getDefaultLayers() {
   return layers.filter(l => l.type === 'image' && l.isDefault);
@@ -463,6 +472,15 @@ function distributeSelected(axis) {
   }
   updatePropertyPanel();
 }
+
+['alignLeft','alignHCenter','alignRight','alignTop','alignVCenter','alignBottom','distH','distV','prev','next','zoomIn','zoomOut'].forEach(id => {
+  const btn = document.getElementById(id);
+  if (!btn) return;
+  btn.addEventListener('click', e => {
+    const action = e.currentTarget.dataset.action || '';
+    if (action) showActionInfo(action);
+  });
+});
 
 document.getElementById('alignLeft').addEventListener('click', () => alignSelected('left'));
 document.getElementById('alignHCenter').addEventListener('click', () => alignSelected('hcenter'));

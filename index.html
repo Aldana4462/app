@@ -45,14 +45,14 @@
                 <div id="alignControls">
                     <h4>Alinear</h4>
                     <div class="align-group">
-                        <button id="alignLeft" title="Alinear a la izquierda">
+                        <button id="alignLeft" title="Alinear a la izquierda" data-action="Alinear izquierda">
                             <svg viewBox="0 0 24 24" width="20" height="20">
                                 <rect x="3" y="3" width="2" height="18" fill="currentColor"/>
                                 <rect x="7" y="6" width="14" height="4" fill="currentColor"/>
                                 <rect x="7" y="14" width="10" height="4" fill="currentColor"/>
                             </svg>
                         </button>
-                        <button id="alignHCenter" title="Centrar horizontalmente">
+                        <button id="alignHCenter" title="Centrar horizontalmente" data-action="Centrar horizontal">
                             <svg viewBox="0 0 24 24" width="20" height="20">
                                 <rect x="4" y="3" width="2" height="18" fill="currentColor"/>
                                 <rect x="18" y="3" width="2" height="18" fill="currentColor"/>
@@ -60,7 +60,7 @@
                                 <rect x="6" y="14" width="12" height="4" fill="currentColor"/>
                             </svg>
                         </button>
-                        <button id="alignRight" title="Alinear a la derecha">
+                        <button id="alignRight" title="Alinear a la derecha" data-action="Alinear derecha">
                             <svg viewBox="0 0 24 24" width="20" height="20">
                                 <rect x="19" y="3" width="2" height="18" fill="currentColor"/>
                                 <rect x="3" y="6" width="14" height="4" fill="currentColor"/>
@@ -69,14 +69,14 @@
                         </button>
                     </div>
                     <div class="align-group">
-                        <button id="alignTop" title="Alinear arriba">
+                        <button id="alignTop" title="Alinear arriba" data-action="Alinear arriba">
                             <svg viewBox="0 0 24 24" width="20" height="20">
                                 <rect x="3" y="3" width="18" height="2" fill="currentColor"/>
                                 <rect x="6" y="7" width="4" height="14" fill="currentColor"/>
                                 <rect x="14" y="7" width="4" height="10" fill="currentColor"/>
                             </svg>
                         </button>
-                        <button id="alignVCenter" title="Centrar verticalmente">
+                        <button id="alignVCenter" title="Centrar verticalmente" data-action="Centrar vertical">
                             <svg viewBox="0 0 24 24" width="20" height="20">
                                 <rect x="3" y="4" width="18" height="2" fill="currentColor"/>
                                 <rect x="3" y="18" width="18" height="2" fill="currentColor"/>
@@ -84,7 +84,7 @@
                                 <rect x="14" y="6" width="4" height="12" fill="currentColor"/>
                             </svg>
                         </button>
-                        <button id="alignBottom" title="Alinear abajo">
+                        <button id="alignBottom" title="Alinear abajo" data-action="Alinear abajo">
                             <svg viewBox="0 0 24 24" width="20" height="20">
                                 <rect x="3" y="19" width="18" height="2" fill="currentColor"/>
                                 <rect x="6" y="3" width="4" height="14" fill="currentColor"/>
@@ -94,7 +94,7 @@
                     </div>
                     <h4>Distribuir</h4>
                     <div class="align-group">
-                        <button id="distH" title="Distribuir horizontalmente">
+                        <button id="distH" title="Distribuir horizontalmente" data-action="Distribuir horizontal">
                             <svg viewBox="0 0 24 24" width="20" height="20">
                                 <rect x="3" y="4" width="18" height="2" fill="currentColor"/>
                                 <rect x="6" y="8" width="4" height="8" fill="currentColor"/>
@@ -102,7 +102,7 @@
                                 <rect x="3" y="18" width="18" height="2" fill="currentColor"/>
                             </svg>
                         </button>
-                        <button id="distV" title="Distribuir verticalmente">
+                        <button id="distV" title="Distribuir verticalmente" data-action="Distribuir vertical">
                             <svg viewBox="0 0 24 24" width="20" height="20">
                                 <rect x="4" y="3" width="2" height="18" fill="currentColor"/>
                                 <rect x="8" y="6" width="8" height="4" fill="currentColor"/>
@@ -120,11 +120,29 @@
             </div>
         </div>
         <div class="controls">
-            <button id="prev">&#8592;</button>
-            <button id="zoomOut">-</button>
-            <button id="zoomIn">+</button>
-            <button id="next">&#8594;</button>
+            <button id="prev" title="Anterior" data-action="Anterior">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <polyline points="15 6 9 12 15 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <button id="zoomOut" title="Alejar" data-action="Alejar">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <button id="zoomIn" title="Acercar" data-action="Acercar">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <button id="next" title="Siguiente" data-action="Siguiente">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <polyline points="9 6 15 12 9 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
         </div>
+        <div id="actionInfo"></div>
     </div>
     <script src="script.js"></script>
 </body>
