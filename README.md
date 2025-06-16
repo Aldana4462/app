@@ -21,4 +21,4 @@ Use <kbd>Ctrl</kbd> or <kbd>Cmd</kbd> click to select multiple layers. When only
 one layer is selected the alignment icons snap it to the canvas edges or
 center. With two or more layers selected the same icons align them relative to
 each other, and the distribution icons spread three or more layers evenly along
-The crop icon reveals one slider that trims all sides of the layer equally.
+the chosen axis.

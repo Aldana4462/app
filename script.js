@@ -11,7 +11,10 @@ const propX = document.getElementById('propX');
 const propY = document.getElementById('propY');
 const propRotate = document.getElementById('propRotate');
 const propOpacity = document.getElementById('propOpacity');
-const cropAll = document.getElementById("cropAll");
+const cropTop = document.getElementById('cropTop');
+const cropRight = document.getElementById('cropRight');
+const cropBottom = document.getElementById('cropBottom');
+const cropLeft = document.getElementById('cropLeft');
 const textColor = document.getElementById('textColor');
 const textFont = document.getElementById('textFont');
 const textBold = document.getElementById('textBold');
@@ -176,7 +179,7 @@ function updateCanvasOrder() {
 }
 
 function updatePropertyPanel() {
-  const inputs = [propScale, propX, propY, propRotate, propOpacity, cropAll];
+  const inputs = [propScale, propX, propY, propRotate, propOpacity, cropTop, cropRight, cropBottom, cropLeft];
   const textInputs = [textColor, textFont, textBold, textUpper, textStrike, textUnderline];
   if (selectedLayers.length !== 1) {
     inputs.concat(textInputs).forEach(i => { i.disabled = true; });
@@ -191,7 +194,10 @@ function updatePropertyPanel() {
   propY.value = selectedLayer.y;
   propRotate.value = selectedLayer.rotation;
   propOpacity.value = selectedLayer.opacity;
-  cropAll.value = selectedLayer.crop.top;
+  cropTop.value = selectedLayer.crop.top;
+  cropRight.value = selectedLayer.crop.right;
+  cropBottom.value = selectedLayer.crop.bottom;
+  cropLeft.value = selectedLayer.crop.left;
   if (isText) {
     textColor.value = selectedLayer.color;
     textFont.value = selectedLayer.font;
@@ -309,7 +315,7 @@ document.addEventListener('keydown', e => {
   }
 });
 
-[propScale, propX, propY, propRotate, propOpacity, cropAll].forEach(input => {
+[propScale, propX, propY, propRotate, propOpacity, cropTop, cropRight, cropBottom, cropLeft].forEach(input => {
   input.addEventListener('input', () => {
     if (!selectedLayer) return;
     selectedLayer.scale = parseFloat(propScale.value);
@@ -318,10 +324,10 @@ document.addEventListener('keydown', e => {
     selectedLayer.rotation = parseFloat(propRotate.value);
     selectedLayer.opacity = parseFloat(propOpacity.value);
     selectedLayer.crop = {
-      top: parseFloat(cropAll.value),
-      right: parseFloat(cropAll.value),
-      bottom: parseFloat(cropAll.value),
-      left: parseFloat(cropAll.value)
+      top: parseFloat(cropTop.value),
+      right: parseFloat(cropRight.value),
+      bottom: parseFloat(cropBottom.value),
+      left: parseFloat(cropLeft.value)
     };
     applyLayerStyles(selectedLayer);
   });
