@@ -161,9 +161,6 @@ body {
   align-items: center;
   cursor: pointer;
 }
-#layerPanel input.layer-select {
-  margin-right: 5px;
-}
 
 #layerPanel li .layer-name {
   white-space: nowrap;

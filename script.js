@@ -75,22 +75,6 @@ function updateLayerPanel() {
     li.draggable = true;
     li.dataset.index = layers.indexOf(layer);
 
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.classList.add('layer-select');
-    checkbox.checked = selectedLayers.includes(layer);
-    checkbox.addEventListener('change', e => {
-      if (checkbox.checked) {
-        if (!selectedLayers.includes(layer)) selectedLayers.push(layer);
-        selectedLayer = layer;
-      } else {
-        selectedLayers = selectedLayers.filter(l => l !== layer);
-        if (selectedLayer === layer) selectedLayer = selectedLayers[0] || null;
-      }
-      updateLayerPanel();
-    });
-    li.appendChild(checkbox);
-
     const nameSpan = document.createElement('span');
     nameSpan.classList.add('layer-name');
     nameSpan.textContent = layer.name;
@@ -132,9 +116,18 @@ function updateLayerPanel() {
       if (idx > -1) {
         layers.splice(idx, 1);
         layer.element.remove();
-      if (e.target.closest('.layer-controls') || e.target === checkbox) return;
-      checkbox.checked = !checkbox.checked;
-      checkbox.dispatchEvent(new Event('change'));
+        if (selectedLayer === layer) selectedLayer = null;
+        updateCanvasOrder();
+        updateLayerPanel();
+      }
+    });
+    controls.appendChild(delBtn);
+
+    li.appendChild(controls);
+    if (layer === selectedLayer) li.classList.add('selected');
+    li.addEventListener('click', () => {
+      selectedLayer = layer;
+      updateLayerPanel();
     });
     li.addEventListener('dragstart', e => {
       dragStartIndex = parseInt(e.target.dataset.index, 10);
