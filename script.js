@@ -227,39 +227,6 @@ function addImageLayer(src, name, isDefault = false) {
   return layer;
 }
 
-function createTextLayer(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  div.classList.add('text-layer');
-  canvas.appendChild(div);
-  customTextCount++;
-  const layer = {
-    type: 'text',
-    element: div,
-    name: `Texto ${customTextCount}`,
-    scale: 1,
-    x: 0,
-    y: 0,
-    rotation: 0,
-    crop: { top: 0, right: 0, bottom: 0, left: 0 },
-    opacity: 1,
-    visible: true,
-    color: '#000000',
-    font: 'Roboto',
-    bold: false,
-    upper: false,
-    strike: false,
-    underline: false
-  };
-  layers.push(layer);
-  applyLayerStyles(layer);
-  updateCanvasOrder();
-  selectedLayers = [layer];
-  selectedLayer = layer;
-  updateLayerPanel();
-  return layer;
-}
-
 
 defaultImages.forEach((src, i) => addImageLayer(src, `Imagen ${i + 1}`, true));
 const imageLayers = layers.filter(l => l.type === 'image');
@@ -328,14 +295,18 @@ document.getElementById('upload').addEventListener('change', e => {
 document.getElementById('addText').addEventListener('click', () => {
   const value = textInput.value.trim();
   if (!value) return;
-  createTextLayer(value);
+  const div = document.createElement('div');
+  div.textContent = value;
+  div.classList.add('text-layer');
+  canvas.appendChild(div);
+  customTextCount++;
+  layers.push({ type: 'text', element: div, name: `Texto ${customTextCount}`, scale: 1, x: 0, y: 0, rotation: 0, crop: {top:0,right:0,bottom:0,left:0}, opacity: 1, visible: true, color: '#000000', font: 'Roboto', bold: false, upper: false, strike: false, underline: false });
+  applyLayerStyles(layers[layers.length - 1]);
+  updateCanvasOrder();
   textInput.value = '';
-});
-
-document.getElementById('addTextIcon').addEventListener('click', () => {
-  const value = prompt('Ingrese texto');
-  if (!value) return;
-  createTextLayer(value.trim());
+  selectedLayers = [layers[layers.length - 1]];
+  selectedLayer = layers[layers.length - 1];
+  updateLayerPanel();
 });
 
 document.addEventListener('keydown', e => {
