@@ -23,6 +23,8 @@ const textBold = document.getElementById('textBold');
 const textUpper = document.getElementById('textUpper');
 const textStrike = document.getElementById('textStrike');
 const textUnderline = document.getElementById('textUnderline');
+const textOutlineColor = document.getElementById('textOutlineColor');
+const textOutlineWidth = document.getElementById('textOutlineWidth');
 const layers = [];
 let customImageCount = 0;
 let customTextCount = 0;
@@ -76,6 +78,8 @@ function applyLayerStyles(layer) {
     if (layer.underline) decorations.push('underline');
     if (layer.strike) decorations.push('line-through');
     layer.element.style.textDecoration = decorations.join(' ');
+    layer.element.style.webkitTextStroke = `${layer.outlineWidth}px ${layer.outlineColor}`;
+    layer.element.style.textStroke = `${layer.outlineWidth}px ${layer.outlineColor}`;
   }
 }
 
@@ -182,7 +186,7 @@ function updateCanvasOrder() {
 
 function updatePropertyPanel() {
   const inputs = [propScale, propX, propY, propRotate, propOpacity, cropTop, cropRight, cropBottom, cropLeft];
-  const textInputs = [textColor, textFont, textBold, textUpper, textStrike, textUnderline];
+  const textInputs = [textColor, textFont, textBold, textUpper, textStrike, textUnderline, textOutlineColor, textOutlineWidth];
   if (selectedLayers.length !== 1) {
     inputs.concat(textInputs).forEach(i => { i.disabled = true; });
     return;
@@ -207,6 +211,8 @@ function updatePropertyPanel() {
     textUpper.checked = selectedLayer.upper;
     textStrike.checked = selectedLayer.strike;
     textUnderline.checked = selectedLayer.underline;
+    textOutlineColor.value = selectedLayer.outlineColor;
+    textOutlineWidth.value = selectedLayer.outlineWidth;
   }
 }
 
@@ -227,7 +233,9 @@ function addImageLayer(src, name, isDefault = false) {
   return layer;
 }
 
-
+    underline: false,
+    outlineColor: '#ffffff',
+    outlineWidth: 0
 defaultImages.forEach((src, i) => addImageLayer(src, `Imagen ${i + 1}`, true));
 const imageLayers = layers.filter(l => l.type === 'image');
 if (imageLayers.length > 0) {
@@ -354,7 +362,9 @@ function alignSelected(dir) {
   const rects = selectedLayers.map(l => l.element.getBoundingClientRect());
 
   if (selectedLayers.length === 1) {
-    const layer = selectedLayers[0];
+[textColor, textFont, textBold, textUpper, textStrike, textUnderline, textOutlineColor, textOutlineWidth].forEach(input => {
+    selectedLayer.outlineColor = textOutlineColor.value;
+    selectedLayer.outlineWidth = parseInt(textOutlineWidth.value, 10);
     const rect = rects[0];
     let dx = 0;
     let dy = 0;
