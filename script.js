@@ -227,23 +227,6 @@ function addImageLayer(src, name, isDefault = false) {
   return layer;
 }
 
-function createTextLayer(text, editing = false) {
-  if (editing) startTextEditing(layer);
-function startTextEditing(layer) {
-  layer.element.contentEditable = 'true';
-  layer.element.classList.add('editing');
-  layer.element.style.pointerEvents = 'auto';
-  layer.element.focus();
-  const finish = () => {
-    layer.element.contentEditable = 'false';
-    layer.element.classList.remove('editing');
-    layer.element.style.pointerEvents = 'none';
-    layer.name = layer.element.textContent || layer.name;
-    updateLayerPanel();
-    layer.element.removeEventListener('blur', finish);
-  };
-  layer.element.addEventListener('blur', finish);
-}
 
 defaultImages.forEach((src, i) => addImageLayer(src, `Imagen ${i + 1}`, true));
 const imageLayers = layers.filter(l => l.type === 'image');
@@ -326,7 +309,9 @@ document.getElementById('addText').addEventListener('click', () => {
   updateLayerPanel();
 });
 
-  createTextLayer('', true);
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft') {
+    document.getElementById('prev').click();
   } else if (e.key === 'ArrowRight') {
     document.getElementById('next').click();
   }

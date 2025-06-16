@@ -87,11 +87,6 @@ body {
   pointer-events: none;
 }
 
-.text-layer.editing {
-  pointer-events: auto;
-  outline: 1px dashed #666;
-}
-
 .controls {
   display: flex;
   justify-content: center;
